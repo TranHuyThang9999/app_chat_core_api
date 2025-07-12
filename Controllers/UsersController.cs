@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PaymentCoreServiceApi.Features.Users.Commands;
+using PaymentCoreServiceApi.Features.Users.Queries;
 
 namespace PaymentCoreServiceApi.Controllers;
 
@@ -23,5 +24,12 @@ public class UsersController : ControllerBase
     {
         var user = await _mediator.Send(command);
         return Ok(user);
+    }
+
+    [HttpGet("profile")]
+    public async Task<IActionResult> GetProfile()
+    {
+        var profile = await _mediator.Send(new GetUserProfileQuery());
+        return Ok(profile);
     }
 }

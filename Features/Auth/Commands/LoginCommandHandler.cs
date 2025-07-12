@@ -1,6 +1,8 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using PaymentCoreServiceApi.Core.Interfaces.Repositories.Write;
 using PaymentCoreServiceApi.Infrastructure.DbContexts;
+using PaymentCoreServiceApi.Services;
 
 namespace PaymentCoreServiceApi.Features.Auth.Commands;
 
@@ -8,11 +10,16 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
 {
     private readonly AppDbContext _context;
     private readonly IJwtService _jwtService;
+    private readonly ICurrentUser _currentUser;
 
-    public LoginCommandHandler(AppDbContext context, IJwtService jwtService)
+    public LoginCommandHandler(
+        AppDbContext context, 
+        IJwtService jwtService,
+        ICurrentUser currentUser)
     {
         _context = context;
         _jwtService = jwtService;
+        _currentUser = currentUser;
     }
 
     public async Task<LoginResponse> Handle(LoginCommand request, CancellationToken cancellationToken)

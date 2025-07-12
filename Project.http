@@ -1,0 +1,30 @@
+@host = http://localhost:5000
+@authToken = your-jwt-token-here
+
+### Login to get token
+# @name login
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "your-email@example.com",
+    "password": "your-password"
+}
+
+### Get All User's Projects
+GET {{host}}/api/project/my-projects
+Authorization: Bearer {{authToken}}
+
+### Get Specific Project by ID
+GET {{host}}/api/project/1
+Authorization: Bearer {{authToken}}
+
+### Create New Project
+POST {{host}}/api/project/create
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "name": "New Test Project",
+    "description": "This is a test project created via API"
+}

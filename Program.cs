@@ -24,7 +24,8 @@ builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 // Register Services
 builder.Services
     .AddRepositories()
-    .AddJwtAuthentication(builder.Configuration);
+    .AddJwtAuthentication(builder.Configuration)
+    .AddHttpContextServices();
 
 var app = builder.Build();
 

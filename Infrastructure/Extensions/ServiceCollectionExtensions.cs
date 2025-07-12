@@ -7,6 +7,7 @@ using PaymentCoreServiceApi.Core.Interfaces.Repositories.Write;
 using PaymentCoreServiceApi.Features.Auth;
 using PaymentCoreServiceApi.Infrastructure.Repositories.Write;
 using PaymentCoreServiceApi.Middlewares;
+using PaymentCoreServiceApi.Services;
 
 namespace PaymentCoreServiceApi.Infrastructure.Extensions;
 
@@ -19,6 +20,14 @@ public static class ServiceCollectionExtensions
         
         // Register Domain Specific Repositories
         services.AddScoped<IUserWriteRepository, UserWriteRepository>();
+        
+        return services;
+    }
+
+    public static IServiceCollection AddHttpContextServices(this IServiceCollection services)
+    {
+        services.AddHttpContextAccessor();
+        services.AddScoped<ICurrentUser, CurrentUser>();
         
         return services;
     }
