@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using PaymentCoreServiceApi.Features.Users.Commands;
 
@@ -18,7 +19,7 @@ public class UsersController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
     {
-        var userId = await _mediator.Send(command);
-        return CreatedAtAction(nameof(Create), new { id = userId }, userId);
+        var user = await _mediator.Send(command);
+        return Ok(user);
     }
 }

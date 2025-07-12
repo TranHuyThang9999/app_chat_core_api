@@ -1,6 +1,8 @@
+using PaymentCoreServiceApi.Core.Interfaces.Repositories.IUnitOfWork;
+
 namespace PaymentCoreServiceApi.Core.Interfaces.Repositories.Write
 {
-    public interface IBaseWriteOnlyRepository<TEntity> where TEntity : class
+    public interface IBaseWriteOnlyRepository<TEntity> : IDbUnitOfWork where TEntity : class
     {
         Task<TEntity> AddAsync(TEntity entity, string[]? excludeProperties = null);
         Task<List<TEntity>> AddRangeAsync(IEnumerable<TEntity> entities);

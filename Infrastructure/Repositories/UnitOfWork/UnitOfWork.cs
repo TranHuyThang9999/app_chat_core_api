@@ -3,18 +3,23 @@ using PaymentCoreServiceApi.Infrastructure.DbContexts;
 
 namespace PaymentCoreServiceApi.Infrastructure.Repositories.UnitOfWork
 {
-    public class UnitOfWork(AppDbContext context) : IUnitOfWork, IDisposable
+    public class UnitOfWork(AppDbContext context) : IDbUnitOfWork, IDisposable
     {
         private readonly AppDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
 
-        public async Task CommitAsync(CancellationToken cancellationToken = default)
-        {
-            await _context.SaveChangesAsync(cancellationToken);
-        }
+    public async Task CommitAsync(CancellationToken cancellationToken = default)
+    {
+        await _context.SaveChangesAsync(cancellationToken);
+    }
 
-        public void Dispose()
-        {
-            _context.Dispose();
+    public void Commit()
+    {
+        _context.SaveChanges();
+    }
+
+    public void Dispose()
+    {
+        _context.Dispose();
         }
     }
 }

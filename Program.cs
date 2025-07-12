@@ -2,7 +2,9 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using PaymentCoreServiceApi.Infrastructure.DbContexts;
 using PaymentCoreServiceApi.Core.Interfaces.Repositories.Write;
+using PaymentCoreServiceApi.Core.Interfaces.Repositories.IUnitOfWork;
 using PaymentCoreServiceApi.Infrastructure.Repositories.Write;
+using PaymentCoreServiceApi.Infrastructure.Repositories.UnitOfWork;
 using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);

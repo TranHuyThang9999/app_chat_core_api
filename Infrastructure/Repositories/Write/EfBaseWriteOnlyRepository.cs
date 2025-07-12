@@ -1,5 +1,6 @@
 using PaymentCoreServiceApi.Core.Entities.BaseModel;
 using PaymentCoreServiceApi.Core.Interfaces.Repositories.Write;
+using PaymentCoreServiceApi.Core.Interfaces.Repositories.IUnitOfWork;
 using PaymentCoreServiceApi.Infrastructure.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +15,6 @@ public class EfBaseWriteOnlyRepository<TEntity>(AppDbContext context) : IBaseWri
     public async Task<TEntity> AddAsync(TEntity entity, string[]? excludeProperties = null)
     {
         await DbSet.AddAsync(entity);
-        await Context.SaveChangesAsync();
         return entity;
     }
 
@@ -22,14 +22,12 @@ public class EfBaseWriteOnlyRepository<TEntity>(AppDbContext context) : IBaseWri
     {
         var entityBases = entities as TEntity[] ?? entities.ToArray();
         await DbSet.AddRangeAsync(entityBases);
-        await Context.SaveChangesAsync();
         return entityBases.ToList();
     }
 
     public async Task<TEntity> UpdateAsync(TEntity entity, string[]? excludeProperties = null)
     {
         DbSet.Update(entity);
-        await Context.SaveChangesAsync();
         return entity;
     }
 
@@ -37,14 +35,12 @@ public class EfBaseWriteOnlyRepository<TEntity>(AppDbContext context) : IBaseWri
     {
         var entityBases = entities as TEntity[] ?? entities.ToArray();
         DbSet.UpdateRange(entityBases);
-        await Context.SaveChangesAsync();
         return entityBases.ToList();
     }
 
     public async Task<TEntity> DeleteAsync(TEntity entity)
     {
         DbSet.Remove(entity);
-        await Context.SaveChangesAsync();
         return entity;
     }
 
@@ -52,7 +48,6 @@ public class EfBaseWriteOnlyRepository<TEntity>(AppDbContext context) : IBaseWri
     {
         IEnumerable<TEntity> entityBases = entities.ToList();
         DbSet.RemoveRange(entityBases);
-        await Context.SaveChangesAsync();
         return entityBases.ToList();
     }
 
@@ -69,5 +64,15 @@ public class EfBaseWriteOnlyRepository<TEntity>(AppDbContext context) : IBaseWri
     public void Dispose()
     {
         Context.Dispose();
+    }
+
+    public async Task CommitAsync(CancellationToken cancellationToken = default)
+    {
+        await Context.SaveChangesAsync(cancellationToken);
+    }
+
+    public void Commit()
+    {
+        Context.SaveChanges();
     }
 }

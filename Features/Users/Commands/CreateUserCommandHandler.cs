@@ -15,26 +15,32 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, User>
 
     public async Task<User> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        var user = new User
+        try
         {
-            NickName = request.NickName,
-            Avatar = request.Avatar,
-            Gender = request.Gender,
-            BirthDate = request.BirthDate,
-            Age = request.Age,
-            Email = request.Email,
-            UserName = request.UserName,
-            Password = request.Password,
-            PhoneNumber = request.PhoneNumber,
-            Address = request.Address,
-            Active = true,
-        };
+            var user = new User
+            {
+                NickName = request.NickName,
+                Avatar = request.Avatar,
+                Gender = request.Gender,
+                BirthDate = request.BirthDate,
+                Age = request.Age,
+                Email = request.Email,
+                UserName = request.UserName,
+                Password = request.Password, // Note: In production, hash this password
+                PhoneNumber = request.PhoneNumber,
+                Address = request.Address,
+                Active = true
+            };
 
-
-        var result = await _userWriteRepository.AddAsync(user);
+            // Add the user without auto-commit
+            var result = await _userWriteRepository.AddAsync(user);
+            await _userWriteRepository.CommitAsync();
+            return result;
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
         
-        return result;
     }
-
-    public IUserWriteRepository UserWriteRepository => _userWriteRepository;
 }
