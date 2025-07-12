@@ -9,9 +9,5 @@ public class AppDbContext: DbContext
     {
     }
     public DbSet<User> Users { get; set; }
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-        // Optional: Fluent API config here
-    }
+   //dotnet ef database update
 }

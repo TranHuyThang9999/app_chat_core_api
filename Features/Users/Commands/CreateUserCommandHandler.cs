@@ -17,12 +17,24 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, User>
     {
         var user = new User
         {
-            UserName = request.Username,
+            NickName = request.NickName,
+            Avatar = request.Avatar,
+            Gender = request.Gender,
+            BirthDate = request.BirthDate,
+            Age = request.Age,
             Email = request.Email,
-            Password = request.Password // Note: In a real application, you should hash the password
+            UserName = request.UserName,
+            Password = request.Password,
+            PhoneNumber = request.PhoneNumber,
+            Address = request.Address,
+            Active = true,
         };
 
+
         var result = await _userWriteRepository.AddAsync(user);
+        
         return result;
     }
+
+    public IUserWriteRepository UserWriteRepository => _userWriteRepository;
 }
