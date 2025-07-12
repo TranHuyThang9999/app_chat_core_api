@@ -1,6 +1,12 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using PaymentCoreServiceApi.Core.Interfaces.Repositories.Write;
+using PaymentCoreServiceApi.Features.Auth;
 using PaymentCoreServiceApi.Infrastructure.Repositories.Write;
+using PaymentCoreServiceApi.Middlewares;
 
 namespace PaymentCoreServiceApi.Infrastructure.Extensions;
 
@@ -14,6 +20,32 @@ public static class ServiceCollectionExtensions
         // Register Domain Specific Repositories
         services.AddScoped<IUserWriteRepository, UserWriteRepository>();
         
+        return services;
+    }
+
+    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
+    {
+        // Register JWT Services
+        services.AddScoped<IJwtService, JwtService>();
+        services.AddScoped<JwtMiddleware>();
+
+        // Configure JWT Authentication
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidAudience = configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!))
+                };
+            });
+
         return services;
     }
 }
