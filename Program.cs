@@ -1,10 +1,7 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using PaymentCoreServiceApi.Infrastructure.DbContexts;
-using PaymentCoreServiceApi.Core.Interfaces.Repositories.Write;
-using PaymentCoreServiceApi.Core.Interfaces.Repositories.IUnitOfWork;
-using PaymentCoreServiceApi.Infrastructure.Repositories.Write;
-using PaymentCoreServiceApi.Infrastructure.Repositories.UnitOfWork;
+using PaymentCoreServiceApi.Infrastructure.Extensions;
 using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,8 +18,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
 // Register Repositories
-builder.Services.AddScoped(typeof(IBaseWriteOnlyRepository<>), typeof(EfBaseWriteOnlyRepository<>));
-builder.Services.AddScoped<IUserWriteRepository, UserWriteRepository>();
+builder.Services.AddRepositories();
 
 var app = builder.Build();
 
