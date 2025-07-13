@@ -1,11 +1,11 @@
-using MediatR;
+using PaymentCoreServiceApi.Common;
+using PaymentCoreServiceApi.Common.Mediator;
 using PaymentCoreServiceApi.Core.Entities.UserGenerated;
 using PaymentCoreServiceApi.Core.Interfaces.Repositories.Read;
 using PaymentCoreServiceApi.Core.Interfaces.Repositories.Write;
 
 namespace PaymentCoreServiceApi.Features.Users.Commands;
-
-public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, User>
+public class CreateUserCommandHandler: IRequestApiResponseHandler<CreateUserCommand, User>
 {
     private readonly IUserWriteRepository _userWriteRepository;
     private readonly IUserReadRepository _userReadRepository;
@@ -15,11 +15,11 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, User>
         _userReadRepository = userReadRepository;
     }
 
-    public async Task<User> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResponse<User>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         if (await _userReadRepository.ExistsAsync(request.UserName))
         {
-            return null;
+            return ApiResponse<User>.Conflict();
         }
         try
         {
@@ -40,11 +40,12 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, User>
 
             var result = await _userWriteRepository.AddAsync(user);
             await _userWriteRepository.CommitAsync();
-            return result;
+            
+            return ApiResponse<User>.Success(user, "User created successfully");
         }
         catch (Exception ex)
         {
-            throw;
+            return ApiResponse<User>.InternalServerError(ex.Message);
         }
         
     }

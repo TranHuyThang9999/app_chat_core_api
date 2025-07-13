@@ -3,11 +3,13 @@ using PaymentCoreServiceApi.Core.Entities.BankAccountGenerated;
 using PaymentCoreServiceApi.Core.Interfaces.Repositories.Read;
 using PaymentCoreServiceApi.Core.Interfaces.Repositories.Write;
 using AutoMapper;
+using PaymentCoreServiceApi.Common;
+using PaymentCoreServiceApi.Common.Mediator;
 using PaymentCoreServiceApi.Services;
 
 namespace PaymentCoreServiceApi.Features.BankAccounts.Commands;
 
-public class CreateBankAccountCommandHandler: IRequestHandler<CreateBankAccountCommand, BankAccount>
+public class CreateBankAccountCommandHandler : IRequestApiResponseHandler<CreateBankAccountCommand, BankAccount>
 {
     private readonly IUserReadRepository _userReadRepository;
     private readonly IBankAccountWriteRepository _bankAccountWriteRepository;
@@ -28,7 +30,7 @@ public class CreateBankAccountCommandHandler: IRequestHandler<CreateBankAccountC
         _logger = logger;
     }
 
-    public async Task<BankAccount> Handle(CreateBankAccountCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResponse<BankAccount>>  Handle(CreateBankAccountCommand request, CancellationToken cancellationToken)
     {
         try
         {
@@ -36,12 +38,12 @@ public class CreateBankAccountCommandHandler: IRequestHandler<CreateBankAccountC
 
             if (user == null)
             {
-                throw new Exception("User not found");
+                return  ApiResponse<BankAccount>.NotFound("User not found");
             }
 
             if (await _bankAccountReadRepository.ExistsBankAccountByUserIdAsync(_executionContext.Id))
             {
-               throw new Exception("User already has a bank account"); 
+                return ApiResponse<BankAccount>.Conflict();
             }
             var entity = new BankAccount();
             entity.UserId = user.Id;
@@ -54,7 +56,7 @@ public class CreateBankAccountCommandHandler: IRequestHandler<CreateBankAccountC
             await _bankAccountWriteRepository.AddAsync(entity);
             await _bankAccountWriteRepository.CommitAsync();
 
-            return entity;
+            return  ApiResponse<BankAccount>.Success(entity);
         }
         catch (Exception e)
         {

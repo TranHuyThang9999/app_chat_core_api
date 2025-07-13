@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
-using MediatR;
+using PaymentCoreServiceApi.Common;
+using PaymentCoreServiceApi.Common.Mediator;
 using PaymentCoreServiceApi.Core.Entities.BankAccountGenerated;
 
 namespace PaymentCoreServiceApi.Features.BankAccounts.Commands;
-public class CreateBankAccountCommand : IRequest<BankAccount>
+public class CreateBankAccountCommand : IRequestApiResponse<BankAccount>
 {
     [Required]
     public string? AccountNumber { get; set; }

@@ -1,12 +1,13 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using PaymentCoreServiceApi.Common;
+using PaymentCoreServiceApi.Common.Mediator;
 using PaymentCoreServiceApi.Core.Entities.UserGenerated;
 using PaymentCoreServiceApi.Infrastructure.DbContexts;
 using PaymentCoreServiceApi.Services;
 
 namespace PaymentCoreServiceApi.Features.Users.Queries;
-
-public class GetUserProfileQueryHandler : IRequestHandler<GetUserProfileQuery, User>
+public class GetUserProfileQueryHandler : IRequestApiResponseHandler<GetUserProfileQuery, User>
 {
     private readonly AppDbContext _context;
     private readonly IExecutionContext _currentUser;
@@ -19,7 +20,7 @@ public class GetUserProfileQueryHandler : IRequestHandler<GetUserProfileQuery, U
         _currentUser = currentUser;
     }
 
-    public async Task<User> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
+    public async Task<ApiResponse<User>> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
     {
         if (!_currentUser.IsAuthenticated)
         {
@@ -35,6 +36,6 @@ public class GetUserProfileQueryHandler : IRequestHandler<GetUserProfileQuery, U
         }
 
 
-        return user;
+        return ApiResponse<User>.Success(user);
     }
 }

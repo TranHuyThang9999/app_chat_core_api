@@ -9,7 +9,7 @@ namespace PaymentCoreServiceApi.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class UsersController : BaseController
+public class UsersController : ControllerBaseCustom
 {
     private readonly IMediator _mediator;
 
@@ -23,17 +23,14 @@ public class UsersController : BaseController
     public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
     {
         var result = await _mediator.Send(command);
-        if (result == null)
-        {
-            return ErrorResponse("Username already exists");
-        }
-        return SuccessResponse(result);
+        return OK(result);
+
     }
 
     [HttpGet("profile")]
     public async Task<IActionResult> GetProfile()
     {
         var profile = await _mediator.Send(new GetUserProfileQuery());
-        return SuccessResponse(profile);
+        return OK(profile);
     }
 }

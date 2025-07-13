@@ -9,7 +9,7 @@ namespace PaymentCoreServiceApi.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class AuthController : BaseController
+public class AuthController : ControllerBaseCustom
 {
     private readonly IMediator _mediator;
 
@@ -21,14 +21,7 @@ public class AuthController : BaseController
     [AllowAnonymous]
     public async Task <IActionResult> Login([FromBody] LoginCommand command)
     {
-        try
-        {
-            var response = await _mediator.Send(command);
-            return SuccessResponse(response);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return Unauthorized();
-        }
+        var response = await _mediator.Send(command);
+        return Ok(response);
     }
 }

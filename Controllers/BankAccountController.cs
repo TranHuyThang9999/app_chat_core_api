@@ -1,3 +1,4 @@
+using System.Net;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ namespace PaymentCoreServiceApi.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class BankAccountController: BaseController
+public class BankAccountController: ControllerBaseCustom
 {
     private readonly IMediator _mediator;
 
@@ -18,15 +19,8 @@ public class BankAccountController: BaseController
     [HttpPost("create-bank-account")]
     public async Task<IActionResult> Create([FromBody] CreateBankAccountCommand command)
     {
-        try
-        {
-            var bankAccount = await _mediator.Send(command);
-            return SuccessResponse(bankAccount);
-        }
-        catch (Exception ex)
-        {
-            return ErrorResponse(ex.Message, 400);
-        }
+        var result = await _mediator.Send(command);
+        return OK(result);
     }
 
 }

@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
-using MediatR;
+using PaymentCoreServiceApi.Common.Mediator;
 using PaymentCoreServiceApi.Core.Entities.UserGenerated;
 
 namespace PaymentCoreServiceApi.Features.Users.Commands;
 
-public record CreateUserCommand: IRequest<User>
+public record CreateUserCommand: IRequestApiResponse<User>
 {
     public string NickName { get; set; }
     public string Avatar { get; set; }
