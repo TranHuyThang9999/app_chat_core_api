@@ -1,4 +1,4 @@
-using PaymentCoreServiceApi.Core.Entities.UserAgents;
+using PaymentCoreServiceApi.Core.Entities.UserGenerated;
 using PaymentCoreServiceApi.Core.Interfaces.Repositories.Write;
 using PaymentCoreServiceApi.Infrastructure.DbContexts;
 

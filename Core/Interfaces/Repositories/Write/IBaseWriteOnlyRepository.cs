@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using PaymentCoreServiceApi.Core.Interfaces.Repositories.IUnitOfWork;
 
 namespace PaymentCoreServiceApi.Core.Interfaces.Repositories.Write
@@ -15,5 +16,7 @@ namespace PaymentCoreServiceApi.Core.Interfaces.Repositories.Write
 
         Task<TEntity> GetByIdAsync(int id);
         Task<IEnumerable<TEntity>> GetAllAsync();
+        Task<(IEnumerable<TEntity> Items, int TotalCount)> GetPagedAsync(int pageIndex, int pageSize, Expression<Func<TEntity, bool>> predicate);
+
     }
 }

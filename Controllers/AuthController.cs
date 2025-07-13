@@ -8,7 +8,7 @@ namespace PaymentCoreServiceApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize] // Yêu cầu authentication mặc định cho controller
+[Authorize]
 public class AuthController : ControllerBase
 {
     private readonly IMediator _mediator;

@@ -2,7 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using PaymentCoreServiceApi.Core.Entities.UserAgents;
+using PaymentCoreServiceApi.Core.Entities.UserGenerated;
 
 namespace PaymentCoreServiceApi.Features.Auth;
 

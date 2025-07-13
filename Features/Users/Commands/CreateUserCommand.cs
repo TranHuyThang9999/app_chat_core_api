@@ -1,5 +1,5 @@
 using MediatR;
-using PaymentCoreServiceApi.Core.Entities.UserAgents;
+using PaymentCoreServiceApi.Core.Entities.UserGenerated;
 
 namespace PaymentCoreServiceApi.Features.Users.Commands;
 
