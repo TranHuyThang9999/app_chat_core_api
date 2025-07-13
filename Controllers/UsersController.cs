@@ -9,7 +9,7 @@ namespace PaymentCoreServiceApi.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize] // Yêu cầu authentication cho tất cả các endpoints trong controller
-public class UsersController : ControllerBase
+public class UsersController : BaseController
 {
     private readonly IMediator _mediator;
 
@@ -30,6 +30,6 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> GetProfile()
     {
         var profile = await _mediator.Send(new GetUserProfileQuery());
-        return Ok(profile);
+        return SuccessResponse(profile);
     }
 }
