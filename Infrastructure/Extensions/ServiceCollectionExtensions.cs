@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using PaymentCoreServiceApi.Core.Interfaces.Repositories.Read;
 using PaymentCoreServiceApi.Core.Interfaces.Repositories.Write;
 using PaymentCoreServiceApi.Features.Auth;
+using PaymentCoreServiceApi.Infrastructure.Repositories.Read;
 using PaymentCoreServiceApi.Infrastructure.Repositories.Write;
 using PaymentCoreServiceApi.Middlewares;
 using PaymentCoreServiceApi.Services;
@@ -20,7 +22,7 @@ public static class ServiceCollectionExtensions
         
         // Register Domain Specific Repositories
         services.AddScoped<IUserWriteRepository, UserWriteRepository>();
-        
+        services.AddScoped<IUserReadRepository, UserReadRepository>();
         return services;
     }
 

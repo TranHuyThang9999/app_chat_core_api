@@ -22,8 +22,12 @@ public class UsersController : BaseController
     [AllowAnonymous] // Cho phép tạo user mà không cần authentication
     public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
     {
-        var user = await _mediator.Send(command);
-        return Ok(user);
+        var result = await _mediator.Send(command);
+        if (result == null)
+        {
+            return ErrorResponse("Username already exists");
+        }
+        return SuccessResponse(result);
     }
 
     [HttpGet("profile")]
