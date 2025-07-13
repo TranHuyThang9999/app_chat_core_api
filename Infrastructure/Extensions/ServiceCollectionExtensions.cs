@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using PaymentCoreServiceApi.Core.Interfaces.Repositories.Read;
 using PaymentCoreServiceApi.Core.Interfaces.Repositories.Write;
 using PaymentCoreServiceApi.Features.Auth;
+using PaymentCoreServiceApi.Features.BankAccounts.Commands;
 using PaymentCoreServiceApi.Infrastructure.Repositories.Read;
 using PaymentCoreServiceApi.Infrastructure.Repositories.Write;
 using PaymentCoreServiceApi.Middlewares;

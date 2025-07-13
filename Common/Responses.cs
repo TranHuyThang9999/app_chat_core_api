@@ -10,9 +10,8 @@ public class ApiResponse<T>
     public int Code { get; set; } = 0;
     public string Message { get; set; } = "Success";
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public T? Data { get; set; }
-
     public ApiResponse() { }
 
     public ApiResponse(T data, string message = "Success", int code = 0, int httpStatus = 200)

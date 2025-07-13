@@ -22,5 +22,13 @@ public class BankAccountController: ControllerBaseCustom
         var result = await _mediator.Send(command);
         return OK(result);
     }
+    
+    [HttpPut("update-bank-account")]
+    public async Task<IActionResult> Update([FromBody] UpdateBankAccountCommand command)
+    {
+        var result = await _mediator.Send(command);
+        return OK(result);
+    }
+
 
 }
