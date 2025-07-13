@@ -7,8 +7,6 @@ public class CreateBankAccountCommand : IRequest<BankAccount>
 {
     [Required]
     public string? AccountNumber { get; set; }
-    public string? Currency { get; set; }
-    public decimal Balance { get; set; }
     [Required]
     [StringLength(6, MinimumLength = 6)]
     public string CodePinHash { get; set; }

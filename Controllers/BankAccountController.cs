@@ -18,7 +18,15 @@ public class BankAccountController: BaseController
     [HttpPost("create-bank-account")]
     public async Task<IActionResult> Create([FromBody] CreateBankAccountCommand command)
     {
-        var bankAccount = await _mediator.Send(command);
-        return SuccessResponse(bankAccount);
+        try
+        {
+            var bankAccount = await _mediator.Send(command);
+            return SuccessResponse(bankAccount);
+        }
+        catch (Exception ex)
+        {
+            return ErrorResponse(ex.Message, 400);
+        }
     }
+
 }
