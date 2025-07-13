@@ -2,7 +2,7 @@ using PaymentCoreServiceApi.Core.Entities.BaseModel;
 
 namespace PaymentCoreServiceApi.Core.Entities.UserGenerated;
 
-public class User : EntityBase
+public class User: EntityBase
 {
     public string? NickName { get; set; }
     public string Avatar { get; set; }

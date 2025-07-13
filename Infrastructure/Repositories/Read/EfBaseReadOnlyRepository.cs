@@ -4,41 +4,40 @@ using PaymentCoreServiceApi.Infrastructure.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace PaymentCoreServiceApi.Infrastructure.Repositories.Read;
-
-public class EfBaseReadOnlyRepository<TEntity> : IBaseReadRepository<TEntity> where TEntity : EntityBase
+namespace PaymentCoreServiceApi.Infrastructure.Repositories.Read
 {
-    private readonly AppDbContext _context;
-    private readonly DbSet<TEntity> _dbSet;
-
-    public EfBaseReadOnlyRepository(AppDbContext context)
+    public class EfBaseReadOnlyRepository<TEntity> : IBaseReadRepository<TEntity> where TEntity : EntityBase
     {
-        _context = context;
-        _dbSet = context.Set<TEntity>();
-    }
+        private readonly DbSet<TEntity> _dbSet;
 
-    public async Task<TEntity> GetByIdAsync(int id)
-    {
-        return await _dbSet.FindAsync(id);
-    }
+        public EfBaseReadOnlyRepository(AppDbContext context)
+        {
+            _dbSet = context.Set<TEntity>();
+        }
 
-    public async Task<IEnumerable<TEntity>> GetAllAsync()
-    {
-        return await _dbSet.ToListAsync();
-    }
+        public async Task<TEntity?> GetByIdAsync(long id)
+        {
+            return await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
+        }
 
-    public async Task<(IEnumerable<TEntity> Items, int TotalCount)> GetPagedAsync(int pageIndex, int pageSize, Expression<Func<TEntity, bool>> predicate)
-    {
-        var query = _dbSet.Where(predicate);
-        var totalCount = await query.CountAsync();
-        var items = await query
-            .Skip((pageIndex - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
+        {
+            return await _dbSet.AsNoTracking().ToListAsync();
+        }
 
-        return (items, totalCount);
+        public async Task<(IEnumerable<TEntity> Items, int TotalCount)> GetPagedAsync(
+            int pageIndex,
+            int pageSize,
+            Expression<Func<TEntity, bool>> predicate)
+        {
+            var query = _dbSet.AsNoTracking().Where(predicate);
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (items, totalCount);
+        }
     }
-    
-    
-    
 }

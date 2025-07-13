@@ -1,7 +1,6 @@
 using System.Text;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using PaymentCoreServiceApi.Core.Interfaces.Repositories.Read;
 using PaymentCoreServiceApi.Core.Interfaces.Repositories.Write;
@@ -10,6 +9,7 @@ using PaymentCoreServiceApi.Infrastructure.Repositories.Read;
 using PaymentCoreServiceApi.Infrastructure.Repositories.Write;
 using PaymentCoreServiceApi.Middlewares;
 using PaymentCoreServiceApi.Services;
+using PaymentCoreServiceApi.Services.Security;
 
 namespace PaymentCoreServiceApi.Infrastructure.Extensions;
 
@@ -23,13 +23,23 @@ public static class ServiceCollectionExtensions
         // Register Domain Specific Repositories
         services.AddScoped<IUserWriteRepository, UserWriteRepository>();
         services.AddScoped<IUserReadRepository, UserReadRepository>();
+        services.AddScoped<IBankAccountWriteRepository, BankAccountWriteRepository>();
+        services.AddScoped<IBankAccountReadRepository, BankAccountReadRepository>();
+        services.AddScoped<IPinHasher, PinHasher>();
+
+        
+        return services;
+    }
+    public static IServiceCollection AddMappings(this IServiceCollection services)
+    {
+        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         return services;
     }
 
     public static IServiceCollection AddHttpContextServices(this IServiceCollection services)
     {
         services.AddHttpContextAccessor();
-        services.AddScoped<ICurrentUser, CurrentUser>();
+        services.AddScoped<IExecutionContext, CurrentUser>();
         
         return services;
     }

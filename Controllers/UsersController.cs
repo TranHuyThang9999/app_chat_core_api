@@ -8,7 +8,7 @@ namespace PaymentCoreServiceApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize] // Yêu cầu authentication cho tất cả các endpoints trong controller
+[Authorize]
 public class UsersController : BaseController
 {
     private readonly IMediator _mediator;
@@ -19,7 +19,7 @@ public class UsersController : BaseController
     }
 
     [HttpPost]
-    [AllowAnonymous] // Cho phép tạo user mà không cần authentication
+    [AllowAnonymous]
     public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
     {
         var result = await _mediator.Send(command);

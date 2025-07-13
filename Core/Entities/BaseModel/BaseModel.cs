@@ -9,6 +9,6 @@ public abstract class EntityBase
     public bool Deleted { get; set; } = false;
     public int? DeletedBy { get; set; } = null;
     public DateTime? DeletedAt { get; set; } = null;
-    public int? CreatedBy { get; set; } = null;
-    public int? UpdatedBy { get; set; } = null;
+    public long CreatedBy { get; set; } = 0;
+    public long UpdatedBy { get; set; } = 0;
 }

@@ -10,12 +10,12 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
 {
     private readonly AppDbContext _context;
     private readonly IJwtService _jwtService;
-    private readonly ICurrentUser _currentUser;
+    private readonly IExecutionContext _currentUser;
 
     public LoginCommandHandler(
         AppDbContext context, 
         IJwtService jwtService,
-        ICurrentUser currentUser)
+        IExecutionContext currentUser)
     {
         _context = context;
         _jwtService = jwtService;
@@ -27,7 +27,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
         var user = await _context.Users
             .FirstOrDefaultAsync(u => u.UserName == request.UserName, cancellationToken);
 
-        if (user == null || user.Password != request.Password) // In production, use proper password hashing
+        if (user == null || user.Password != request.Password) 
         {
             throw new UnauthorizedAccessException("Invalid username or password");
         }
@@ -37,7 +37,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
         return new LoginResponse
         {
             Token = token,
-            RefreshToken = "", // Implement refresh token if needed
+            RefreshToken = "",
             Expiration = DateTime.Now.AddHours(1)
         };
     }

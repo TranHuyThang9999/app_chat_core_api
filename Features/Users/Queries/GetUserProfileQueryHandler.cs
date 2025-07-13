@@ -9,11 +9,11 @@ namespace PaymentCoreServiceApi.Features.Users.Queries;
 public class GetUserProfileQueryHandler : IRequestHandler<GetUserProfileQuery, User>
 {
     private readonly AppDbContext _context;
-    private readonly ICurrentUser _currentUser;
+    private readonly IExecutionContext _currentUser;
 
     public GetUserProfileQueryHandler(
         AppDbContext context,
-        ICurrentUser currentUser)
+        IExecutionContext currentUser)
     {
         _context = context;
         _currentUser = currentUser;
@@ -27,7 +27,7 @@ public class GetUserProfileQueryHandler : IRequestHandler<GetUserProfileQuery, U
         }
 
         var user = await _context.Users
-            .FirstOrDefaultAsync(u => u.Id.ToString() == _currentUser.Id, cancellationToken);
+            .FirstOrDefaultAsync(u => u.Id == _currentUser.Id, cancellationToken);
 
         if (user == null)
         {

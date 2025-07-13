@@ -1,11 +1,8 @@
 using System.Reflection;
-using System.Text;
 using Microsoft.EntityFrameworkCore;
 using PaymentCoreServiceApi.Infrastructure.DbContexts;
 using PaymentCoreServiceApi.Infrastructure.Extensions;
 using MediatR;
-using Microsoft.IdentityModel.Tokens;
-using PaymentCoreServiceApi.Features.Auth;
 using PaymentCoreServiceApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,7 +22,8 @@ builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services
     .AddRepositories()
     .AddJwtAuthentication(builder.Configuration)
-    .AddHttpContextServices();
+    .AddHttpContextServices()
+    .AddMappings();
 
 var app = builder.Build();
 
