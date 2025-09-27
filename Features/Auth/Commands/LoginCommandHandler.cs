@@ -1,44 +1,65 @@
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using PaymentCoreServiceApi.Core.Interfaces.Repositories.Write;
+using PaymentCoreServiceApi.Common;
+using PaymentCoreServiceApi.Common.Mediator;
 using PaymentCoreServiceApi.Infrastructure.DbContexts;
 using PaymentCoreServiceApi.Services;
 
 namespace PaymentCoreServiceApi.Features.Auth.Commands;
 
-public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
+public class LoginCommandHandler : IRequestApiResponseHandler<LoginCommand, LoginResponse>
 {
     private readonly AppDbContext _context;
     private readonly IJwtService _jwtService;
     private readonly IExecutionContext _currentUser;
+    private readonly IPinHasher _pinHasher;
 
     public LoginCommandHandler(
-        AppDbContext context, 
+        AppDbContext context,
         IJwtService jwtService,
-        IExecutionContext currentUser)
+        IExecutionContext currentUser,
+        IPinHasher pinHasher)
     {
         _context = context;
         _jwtService = jwtService;
         _currentUser = currentUser;
+        _pinHasher = pinHasher;
     }
 
-    public async Task<LoginResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResponse<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        var user = await _context.Users
-            .FirstOrDefaultAsync(u => u.UserName == request.UserName, cancellationToken);
-
-        if (user == null || user.Password != request.Password) 
+        if (string.IsNullOrWhiteSpace(request.UserName) || string.IsNullOrWhiteSpace(request.Password))
         {
-            throw new UnauthorizedAccessException("Invalid username or password");
+            return ApiResponse<LoginResponse>.BadRequest("Username and password are required");
         }
 
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => 
+                (u.UserName == request.UserName || u.Email == request.UserName) 
+                && u.Active && !u.Deleted, 
+                cancellationToken);
+
+        if (user == null)
+        {
+            return ApiResponse<LoginResponse>.Unauthorized("Invalid username or password");
+        }
+        if (!_pinHasher.VerifyPin(request.Password, user.Password))
+        {
+            return ApiResponse<LoginResponse>.Unauthorized("Invalid username or password");
+        }
+
+        // Generate JWT token
         var token = _jwtService.GenerateToken(user);
         
-        return new LoginResponse
+        // Create response
+        var loginResponse = new LoginResponse
         {
             Token = token,
             RefreshToken = "",
-            Expiration = DateTime.Now.AddHours(1)
+            Expiration = DateTime.Now.AddHours(1),
         };
+
+        return ApiResponse<LoginResponse>.Success(loginResponse);
     }
 }

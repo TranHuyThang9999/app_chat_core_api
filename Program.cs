@@ -10,6 +10,29 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 
+// Add CORS configuration from appsettings
+builder.Services.AddCors(options =>
+{
+    var corsConfig = builder.Configuration.GetSection("Cors");
+    var allowedOrigins = corsConfig.GetSection("AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
+    
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins(allowedOrigins)
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    });
+    
+    // Policy cho development - cho phép tất cả
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 builder.Services.AddDbContext<AppDbContext>(options => 
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
 
@@ -27,10 +50,16 @@ builder.Services
 
 var app = builder.Build();
 
+// Configure CORS - phải đặt trước các middleware khác
 if (app.Environment.IsDevelopment())
 {
+    app.UseCors("AllowAll"); // Cho phép tất cả trong development
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+else
+{
+    app.UseCors("AllowFrontend"); // Chỉ cho phép các domain cụ thể trong production
 }
 
 app.UseHttpsRedirection();
