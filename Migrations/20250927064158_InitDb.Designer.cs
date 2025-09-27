@@ -12,8 +12,8 @@ using PaymentCoreServiceApi.Infrastructure.DbContexts;
 namespace PaymentCoreServiceApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250713105755_Init")]
-    partial class Init
+    [Migration("20250927064158_InitDb")]
+    partial class InitDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

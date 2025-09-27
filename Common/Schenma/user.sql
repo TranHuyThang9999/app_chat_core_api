@@ -1,0 +1,21 @@
+CREATE TABLE users (
+    id BIGSERIAL PRIMARY KEY,
+    nick_name VARCHAR(255),
+    avatar VARCHAR(500) NOT NULL,
+    gender INTEGER,
+    birth_date TIMESTAMP,
+    age INTEGER NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    user_name VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(20) NOT NULL,
+    address VARCHAR(500) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    active BOOLEAN NOT NULL DEFAULT TRUE,
+    deleted BOOLEAN NOT NULL DEFAULT FALSE,
+    deleted_by INTEGER,
+    deleted_at TIMESTAMP,
+    created_by BIGINT NOT NULL DEFAULT 0,
+    updated_by BIGINT NOT NULL DEFAULT 0
+);
