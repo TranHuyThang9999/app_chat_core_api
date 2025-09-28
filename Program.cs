@@ -4,6 +4,8 @@ using PaymentCoreServiceApi.Infrastructure.DbContexts;
 using PaymentCoreServiceApi.Infrastructure.Extensions;
 using MediatR;
 using PaymentCoreServiceApi.Middlewares;
+using PaymentCoreServiceApi.Services;
+using Minio;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +49,24 @@ builder.Services
     .AddJwtAuthentication(builder.Configuration)
     .AddHttpContextServices()
     .AddMappings();
+
+// Configure MinIO
+builder.Services.AddSingleton<IMinioClient>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var endpoint = configuration["MinIO:Endpoint"];
+    var accessKey = configuration["MinIO:AccessKey"];
+    var secretKey = configuration["MinIO:SecretKey"];
+    var useSSL = bool.Parse(configuration["MinIO:UseSSL"] ?? "false");
+
+    return new MinioClient()
+        .WithEndpoint(endpoint)
+        .WithCredentials(accessKey, secretKey)
+        .WithSSL(useSSL)
+        .Build();
+});
+
+builder.Services.AddScoped<IMinIOService, MinIOService>();
 
 var app = builder.Build();
 
