@@ -13,7 +13,7 @@ jobs:
     name: Code Quality Check
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -37,7 +37,7 @@ jobs:
     name: Security Scan
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
@@ -73,7 +73,7 @@ jobs:
           - 5432:5432
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
