@@ -26,6 +26,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IUserReadRepository, UserReadRepository>();
         services.AddScoped<IBankAccountWriteRepository, BankAccountWriteRepository>();
         services.AddScoped<IBankAccountReadRepository, BankAccountReadRepository>();
+        services.AddScoped<IMessageWriteRepository, MessageWriteRepository>();
+        services.AddScoped<IMessageReadRepository, MessageReadRepository>();
         services.AddScoped<IPinHasher, PinHasher>();
 
         

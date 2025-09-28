@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PaymentCoreServiceApi.Core.Entities.BankAccountGenerated;
+using PaymentCoreServiceApi.Core.Entities.MessageGenerated;
 using PaymentCoreServiceApi.Core.Entities.UserGenerated;
 
 namespace PaymentCoreServiceApi.Infrastructure.DbContexts;
