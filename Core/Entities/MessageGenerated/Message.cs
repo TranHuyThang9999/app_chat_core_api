@@ -114,3 +114,40 @@ public class Message : EntityBase
 //         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 //     }
 // }
+
+// Conversation = 1 cuộc trò chuyện (có thể là group hoặc 1-1).
+
+// ConversationMember = bảng trung gian N-N giữa User và Conversation.
+
+// Message = tin nhắn chính (text, ảnh, file...).
+
+// MessageAttachment = khi tin nhắn có file/ảnh.
+
+// MessageReaction = emoji/icon người khác react vào tin.
+
+// Message
+// -------
+// Id (PK)
+// ConversationId (FK -> Conversation.Id)
+// SenderId (FK -> User.Id)
+// MessageType (enum: Text=1, Image=2, File=3, System=4)
+// Content (nullable, nvarchar(max))  -- dùng cho text
+// CreatedAt (datetime)
+
+// MessageAttachment
+// -----------------
+// Id (PK)
+// MessageId (FK -> Message.Id)
+// FileName (nvarchar(255))
+// FileUrl (nvarchar(max))  -- link lưu file/ảnh (S3, Azure Blob, local...)
+// FileType (enum: Image, Video, Pdf, Other)
+// FileSize (bigint)
+
+
+// MessageReaction
+// ---------------
+// Id (PK)
+// MessageId (FK -> Message.Id)
+// UserId (FK -> User.Id)
+// ReactionType (nvarchar(50)) -- "👍", "❤️", "😂", custom icon
+// CreatedAt (datetime)
