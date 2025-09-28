@@ -7,3 +7,6 @@ dotnet ef database update
 ```export schema=chatdb
 dotnet ef migrations script -o Common/Schenma/migrate.sql
 
+dotnet ef migrations add CreateMessage
+
+dotnet ef database update

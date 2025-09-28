@@ -8,6 +8,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 {
     public DbSet<User> Users { get; set; }
     public DbSet<BankAccount> BankAccounts { get; set; }
-
+    public DbSet<Message> Messages { get; set; }
     //dotnet ef database update
 }
