@@ -16,7 +16,6 @@ public record CreateUserCommand: IRequestApiResponse<User>
     public string UserName { get; set; }
     [Required]
     public string Password { get; set; }
-    [Required]
     public string PhoneNumber { get; set; }
     public string Address { get; set; }
 }
