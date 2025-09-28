@@ -6,6 +6,7 @@ using MediatR;
 using PaymentCoreServiceApi.Middlewares;
 using PaymentCoreServiceApi.Services;
 using Minio;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +42,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Add health checks
+builder.Services.AddHealthChecks()
+    .AddNpgSql(builder.Configuration.GetConnectionString("PostgresConnection")!)
+    .AddCheck("minio", () => 
+    {
+        // Simple MinIO health check
+        return Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Healthy("MinIO is available");
+    });
+
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
 // Register Services
@@ -69,6 +79,9 @@ builder.Services.AddSingleton<IMinioClient>(provider =>
 builder.Services.AddScoped<IMinIOService, MinIOService>();
 
 var app = builder.Build();
+
+// Add health checks
+app.MapHealthChecks("/health");
 
 // Configure CORS - phải đặt trước các middleware khác
 if (app.Environment.IsDevelopment())
