@@ -13,5 +13,27 @@ public class MessageReadRepository : EfBaseReadOnlyRepository<Message>, IMessage
     {
         _context = context;
     }
+    public async Task<IEnumerable<Message>> GetMessagesByConversationAsync(long conversationId,long userId,bool onlyUnread = false,int skip = 0,int take = 50,
+    CancellationToken cancellationToken = default)
+    {
+        // Bước 1: Kiểm tra người dùng có trong hội thoại không
+        var isMember = await _context.ConversationMembers
+            .AnyAsync(cm => cm.ConversationId == conversationId &&
+                            cm.UserId == userId &&
+                            !cm.IsLeft,
+                    cancellationToken);
+
+        if (!isMember)
+            return Enumerable.Empty<Message>();
+
+        // Bước 2: Lấy danh sách tin nhắn
+        var query = _context.Messages
+            .Where(m => m.ConversationId == conversationId)
+            .OrderByDescending(m => m.CreatedAt)
+            .Skip(skip)
+            .Take(take);
+
+        return await query.ToListAsync(cancellationToken);
+    }
 
 }
