@@ -28,7 +28,6 @@
 
     <ItemGroup>
       <Folder Include="Common\DTOs\" />
-      <Folder Include="Core\Caches\" />
       <Folder Include="Features\BankAccounts\Queries\" />
     </ItemGroup>
 

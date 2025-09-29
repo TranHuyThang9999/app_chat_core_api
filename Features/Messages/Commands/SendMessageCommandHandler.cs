@@ -25,41 +25,6 @@ public class SendMessageCommandHandler : IRequestApiResponseHandler<SendMessageC
 
     public async Task<ApiResponse<Message>> Handle(SendMessageCommand request, CancellationToken cancellationToken)
     {
-        try
-        {
-            // Validate sender exists
-            var sender = await _userReadRepository.GetByIdAsync(_currentUser.Id);
-            if (sender == null)
-            {
-                return ApiResponse<Message>.NotFound("Sender not found");
-            }
-
-            // Validate receiver exists
-            var receiver = await _userReadRepository.GetByIdAsync(request.ReceiverId);
-            if (receiver == null)
-            {
-                return ApiResponse<Message>.NotFound("Receiver not found");
-            }
-
-            // Create message
-            var message = new Message
-            {
-                SenderId = _currentUser.Id,
-                ReceiverId = request.ReceiverId,
-                Content = request.Content,
-                SentAt = DateTime.UtcNow,
-                IsRead = false
-            };
-            // Send message
-            var sentMessage = await _messageWriteRepository.AddAsync(message);
-
-            await _messageWriteRepository.CommitAsync();
-
-            return ApiResponse<Message>.Success(sentMessage, "Message sent successfully");
-        }
-        catch (Exception ex)
-        {
-            return ApiResponse<Message>.InternalServerError($"Error sending message: {ex.Message}");
-        }
+        return null;
     }
 }
