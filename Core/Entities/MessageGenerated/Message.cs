@@ -7,7 +7,6 @@ public class Message : EntityBase
 {
     public long ConversationId { get; set; }
     public long SenderId { get; set; }
-
     public MessageType MessageType { get; set; } = MessageType.Text;
     public string? Content { get; set; }
     public string? FileUrl { get; set; }
