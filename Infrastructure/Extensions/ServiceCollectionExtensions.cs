@@ -30,7 +30,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IMessageReadRepository, MessageReadRepository>();
         services.AddScoped<IPinHasher, PinHasher>();
         services.AddScoped<IConversationWriteRepository, ConversationWriteRepository>();
+        services.AddScoped<IConversationReadRepository, ConversationReadRepository>();
         services.AddScoped<IConversationMemberWriteRepository, ConversationMemberWriteRepository>();
+        services.AddScoped<IConversationMemberReadRepository, ConversationMemberReadRepository>();
         
         return services;
     }

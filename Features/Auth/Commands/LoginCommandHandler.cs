@@ -29,37 +29,45 @@ public class LoginCommandHandler : IRequestApiResponseHandler<LoginCommand, Logi
 
     public async Task<ApiResponse<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(request.UserName) || string.IsNullOrWhiteSpace(request.Password))
+        try
         {
-            return ApiResponse<LoginResponse>.BadRequest("Username and password are required");
+            if (string.IsNullOrWhiteSpace(request.UserName) || string.IsNullOrWhiteSpace(request.Password))
+            {
+                return ApiResponse<LoginResponse>.BadRequest("Username and password are required");
+            }
+
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => 
+                    (u.UserName == request.UserName || u.Email == request.UserName) 
+                    && u.Active && !u.Deleted, 
+                    cancellationToken);
+
+            if (user == null)
+            {
+                return ApiResponse<LoginResponse>.Unauthorized("Invalid username or password");
+            }
+            if (!_pinHasher.VerifyPin(request.Password, user.Password))
+            {
+                return ApiResponse<LoginResponse>.Unauthorized("Invalid username or password");
+            }
+
+            // Generate JWT token
+            var token = _jwtService.GenerateToken(user);
+            
+            // Create response
+            var loginResponse = new LoginResponse
+            {
+                Token = token,
+                RefreshToken = "",
+                Expiration = DateTime.Now.AddHours(1),
+            };
+
+            return ApiResponse<LoginResponse>.Success(loginResponse);
         }
-
-        var user = await _context.Users
-            .FirstOrDefaultAsync(u => 
-                (u.UserName == request.UserName || u.Email == request.UserName) 
-                && u.Active && !u.Deleted, 
-                cancellationToken);
-
-        if (user == null)
+        catch (Exception ex)
         {
-            return ApiResponse<LoginResponse>.Unauthorized("Invalid username or password");
+            // Log the exception if needed
+            return ApiResponse<LoginResponse>.InternalServerError("An error occurred during login");
         }
-        if (!_pinHasher.VerifyPin(request.Password, user.Password))
-        {
-            return ApiResponse<LoginResponse>.Unauthorized("Invalid username or password");
-        }
-
-        // Generate JWT token
-        var token = _jwtService.GenerateToken(user);
-        
-        // Create response
-        var loginResponse = new LoginResponse
-        {
-            Token = token,
-            RefreshToken = "",
-            Expiration = DateTime.Now.AddHours(1),
-        };
-
-        return ApiResponse<LoginResponse>.Success(loginResponse);
     }
 }

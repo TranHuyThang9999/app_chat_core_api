@@ -8,14 +8,17 @@ namespace PaymentCoreServiceApi.Infrastructure.Repositories.Read;
 public class MessageReadRepository : EfBaseReadOnlyRepository<Message>, IMessageReadRepository
 {
     private readonly AppDbContext _context;
-
-    public MessageReadRepository(AppDbContext context) : base(context)
+    private readonly ILogger<MessageReadRepository> _logger;
+    public MessageReadRepository(AppDbContext context,ILogger<MessageReadRepository> logger) : base(context)
     {
         _context = context;
+        _logger = logger;
     }
     public async Task<IEnumerable<Message>> GetMessagesByConversationAsync(long conversationId,long userId,bool onlyUnread = false,int skip = 0,int take = 50,
     CancellationToken cancellationToken = default)
     {
+        _logger.LogInformation("GetMessagesByConversationAsync: conversationId = {conversationId}, userId = {userId}, onlyUnread = {onlyUnread}, skip = {skip}, take = {take}",
+            conversationId, userId, onlyUnread, skip, take);
         // Bước 1: Kiểm tra người dùng có trong hội thoại không
         var isMember = await _context.ConversationMembers
             .AnyAsync(cm => cm.ConversationId == conversationId &&
