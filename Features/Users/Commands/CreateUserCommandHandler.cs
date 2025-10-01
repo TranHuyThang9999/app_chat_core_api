@@ -29,7 +29,7 @@ public class CreateUserCommandHandler: IRequestApiResponseHandler<CreateUserComm
         {
             var user = new User
             {
-                NickName = request.NickName,
+                NickName = request.UserName,
                 Avatar = request.Avatar,
                 Gender = request.Gender,
                 BirthDate = request.BirthDate,
