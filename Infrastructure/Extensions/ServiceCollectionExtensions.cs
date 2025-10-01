@@ -75,4 +75,10 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
+
+    public static IServiceCollection AddAppMetrics(this IServiceCollection services)
+    {
+        services.AddSingleton<IAppMetricsService, AppMetricsService>();
+        return services;
+    }
 }

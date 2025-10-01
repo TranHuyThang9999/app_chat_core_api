@@ -7,6 +7,7 @@ using PaymentCoreServiceApi.Middlewares;
 using PaymentCoreServiceApi.Services;
 using Minio;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,7 +59,8 @@ builder.Services
     .AddRepositories()
     .AddJwtAuthentication(builder.Configuration)
     .AddHttpContextServices()
-    .AddMappings();
+    .AddMappings()
+    .AddAppMetrics(); // Add App Metrics service
 
 // Configure MinIO
 builder.Services.AddSingleton<IMinioClient>(provider =>
@@ -78,10 +80,20 @@ builder.Services.AddSingleton<IMinioClient>(provider =>
 
 builder.Services.AddScoped<IMinIOService, MinIOService>();
 
+// Add Prometheus metrics
+builder.Services.AddMetricServer(options =>
+{
+    options.Port = 5050; // Port for metrics endpoint
+});
+
 var app = builder.Build();
 
 // Add health checks
 app.MapHealthChecks("/health");
+
+// Add Prometheus metrics endpoint
+app.UseMetricServer();
+app.UseHttpMetrics();
 
 // Configure CORS - phải đặt trước các middleware khác
 if (app.Environment.IsDevelopment())
@@ -99,6 +111,9 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Use custom metrics middleware
+app.UseMiddleware<MetricsMiddleware>();
 
 // Use JWT Middleware
 app.UseMiddleware<JwtMiddleware>();
