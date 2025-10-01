@@ -9,6 +9,7 @@ Dự án này sử dụng GitHub Actions để thực hiện CI/CD pipeline tự
 - ✅ Docker build và push
 - ✅ Automated deployment
 - ✅ Health monitoring
+- ✅ Metrics monitoring
 
 ## Workflows
 
@@ -68,6 +69,42 @@ API có health check endpoint tại `/health` để monitoring:
 - MinIO service status
 - Application health
 
+## Metrics Monitoring
+API có metrics endpoint tại `http://localhost:5050/metrics` để monitoring với Prometheus:
+- HTTP request metrics (built-in)
+- Custom application metrics:
+  - User login attempts
+  - Messages sent
+  - File uploads
+  - API call counts
+  - Request duration histograms
+
+### Available Metrics:
+- `app_user_login_attempts_total` - Tổng số lần đăng nhập (phân biệt thành công/thất bại)
+- `app_messages_sent_total` - Tổng số tin nhắn đã gửi
+- `app_file_uploads_total` - Tổng số file đã upload (phân biệt loại file)
+- `app_api_calls_total` - Tổng số API calls (phân biệt controller/action)
+- `app_request_duration_seconds` - Thời gian xử lý request (histogram)
+
+### Example Prometheus Queries:
+```
+# Rate of login attempts
+rate(app_user_login_attempts_total[5m])
+
+# Total messages sent
+app_messages_sent_total
+
+# 95th percentile of request duration
+histogram_quantile(0.95, sum(rate(app_request_duration_seconds_bucket[5m])) by (le, endpoint))
+```
+
+### Visualization with Grafana
+For easy visualization of metrics, see [Metrics Visualization Guide](docs/METRICS_VISUALIZATION.md) which includes:
+- Docker Compose setup for Prometheus and Grafana
+- Configuration files
+- Dashboard examples
+- Alerting rules
+
 ## Local Development
 
 ### Chạy với Docker Compose:
@@ -77,6 +114,9 @@ docker-compose up -d
 
 # CI environment
 docker-compose -f docker-compose.ci.yml up -d
+
+# Monitoring stack (Prometheus + Grafana)
+docker-compose -f docker-compose.monitoring.yml up -d
 ```
 
 ### Build và test local:
@@ -113,6 +153,12 @@ dotnet format --verify-no-changes
 ```bash
 # Check application health
 curl https://your-app-url/health
+```
+
+### Metrics Endpoint
+```bash
+# Check application metrics
+curl http://localhost:5050/metrics
 ```
 
 ### Logs
