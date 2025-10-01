@@ -2,11 +2,12 @@ using PaymentCoreServiceApi.Common;
 using PaymentCoreServiceApi.Common.Mediator;
 using PaymentCoreServiceApi.Core.Entities.UserGenerated;
 using PaymentCoreServiceApi.Core.Interfaces.Repositories.Read;
+using PaymentCoreServiceApi.Features.Users.DTOs;
 using PaymentCoreServiceApi.Services;
 
 namespace PaymentCoreServiceApi.Features.Users.Queries;
 
-public class GetUsersQueryHandler : IRequestApiResponseHandler<GetUsersQuery, PagedResult<User>>
+public class GetUsersQueryHandler : IRequestApiResponseHandler<GetUsersQuery, PagedResult<UserBasicInfoDto>>
 {
     private readonly IUserReadRepository _userReadRepository;
     private readonly IExecutionContext _currentUser;
@@ -19,7 +20,7 @@ public class GetUsersQueryHandler : IRequestApiResponseHandler<GetUsersQuery, Pa
         _currentUser = currentUser;
     }
 
-    public async Task<ApiResponse<PagedResult<User>>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
+    public async Task<ApiResponse<PagedResult<UserBasicInfoDto>>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
     {
         if (!_currentUser.IsAuthenticated)
         {
@@ -31,7 +32,19 @@ public class GetUsersQueryHandler : IRequestApiResponseHandler<GetUsersQuery, Pa
             request.PageSize, 
             request.SearchTerm, 
             cancellationToken);
-
-        return ApiResponse<PagedResult<User>>.Success(result);
+        var listUser = result.Items.Select(x => new UserBasicInfoDto
+        {
+            Id = x.Id,
+            NickName = x.NickName,
+            Avatar = x.Avatar,
+            Gender = x.Gender,
+            BirthDate = x.BirthDate,
+            Age = x.Age,
+            Email = x.Email,
+            PhoneNumber = x.PhoneNumber,
+            Address = x.Address,
+        }).ToList();
+        
+        return ApiResponse<PagedResult<UserBasicInfoDto>>.Success(new PagedResult<UserBasicInfoDto>(listUser, result.TotalCount, request.Page, request.PageSize));
     }
 }
