@@ -33,6 +33,14 @@ public class UsersController : ControllerBaseCustom
         var profile = await _mediator.Send(new GetUserProfileQuery());
         return OK(profile);
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetUsers([FromQuery] GetUsersQuery query)
+    {
+        var result = await _mediator.Send(query);
+        return OK(result);
+    }
+
     [HttpPatch("profile")]
     public async Task<IActionResult> UpdateProfile([FromBody] UpdateUserProfileCommand command)
     {
