@@ -14,8 +14,8 @@ namespace PaymentCoreServiceApi.Features.Messages.Commands;
 public class SendMessageCommandHandler : IRequestApiResponseHandler<SendMessageCommand, Message>
 {
     private readonly IMessageWriteRepository _messageWriteRepository;
-    private readonly IConversationWriteRepository _conversationWriteRepository;
-    private readonly IConversationReadRepository _conversationReadRepository;
+    private readonly IChannelWriteRepository _conversationWriteRepository;
+    private readonly IChannelReadRepository _conversationReadRepository;
     private readonly IUserReadRepository _userReadRepository;
     private readonly IExecutionContext _currentUser;
     private readonly ILogger<SendMessageCommandHandler> _logger;
@@ -24,8 +24,8 @@ public class SendMessageCommandHandler : IRequestApiResponseHandler<SendMessageC
 
     public SendMessageCommandHandler(
         IMessageWriteRepository messageWriteRepository,
-        IConversationWriteRepository conversationWriteRepository,
-        IConversationReadRepository conversationReadRepository,
+        IChannelWriteRepository conversationWriteRepository,
+        IChannelReadRepository conversationReadRepository,
         IChannelMemberWriteRepository channelMemberWriteRepository,
         IUserReadRepository userReadRepository,
         IExecutionContext currentUser,
@@ -48,7 +48,7 @@ public class SendMessageCommandHandler : IRequestApiResponseHandler<SendMessageC
             var existingConversation = await _conversationReadRepository.GetPrivateConversationAsync(
                 _currentUser.Id, request.ReceiverId, cancellationToken);
 
-            Conversation conversation;
+            Channel conversation;
             
             if (existingConversation != null)
             {
@@ -59,7 +59,7 @@ public class SendMessageCommandHandler : IRequestApiResponseHandler<SendMessageC
             else
             {
                 // Tạo conversation mới cho private chat
-                conversation = new Conversation
+                conversation = new Channel
                 {
                     IsGroup = false,
                     Name = null // Private chat không cần tên

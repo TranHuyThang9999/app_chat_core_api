@@ -25,7 +25,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     /// - Chứa tên, ảnh đại diện, loại (IsGroup), v.v.
     /// - Là nơi tập hợp tất cả tin nhắn và thành viên.
     /// </summary>
-    public DbSet<Conversation> Channels { get; set; }
+    public DbSet<Channel> Channels { get; set; }
 
     /// <summary>
     /// Bảng trung gian quản lý thành viên trong kênh chat (ChannelMember).

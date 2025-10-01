@@ -1,8 +1,8 @@
-﻿using PaymentCoreServiceApi.Core.Entities.BaseModel;
+using PaymentCoreServiceApi.Core.Entities.BaseModel;
 
 namespace AppChat.Core.Entities.ConversationGenerated;
 
-public class Conversation: EntityBase
+public class Channel : EntityBase
 {
     public string? Name { get; set; }         // null nếu là chat 1-1
     public bool IsGroup { get; set; }         // true = nhóm, false = 1-1

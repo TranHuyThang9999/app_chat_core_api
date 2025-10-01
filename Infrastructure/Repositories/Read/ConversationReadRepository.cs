@@ -5,16 +5,16 @@ using PaymentCoreServiceApi.Infrastructure.DbContexts;
 
 namespace PaymentCoreServiceApi.Infrastructure.Repositories.Read;
 
-public class ConversationReadRepository : EfBaseReadOnlyRepository<Conversation>, IConversationReadRepository
+public class ChannelReadRepository : EfBaseReadOnlyRepository<Channel>, IChannelReadRepository
 {
     private readonly AppDbContext _context;
 
-    public ConversationReadRepository(AppDbContext context) : base(context)
+    public ChannelReadRepository(AppDbContext context) : base(context)
     {
         _context = context;
     }
 
-    public async Task<Conversation?> GetPrivateConversationAsync(long userId1, long userId2, CancellationToken cancellationToken = default)
+    public async Task<Channel?> GetPrivateConversationAsync(long userId1, long userId2, CancellationToken cancellationToken = default)
     {
         // Tìm channel private giữa 2 user
         var conversation = await _context.Channels
@@ -34,7 +34,7 @@ public class ConversationReadRepository : EfBaseReadOnlyRepository<Conversation>
         return conversation;
     }
 
-    public async Task<IEnumerable<Conversation>> GetUserConversationsAsync(long userId, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Channel>> GetUserConversationsAsync(long userId, CancellationToken cancellationToken = default)
     {
         return await _context.Channels
             .Where(c => _context.ChannelMembers

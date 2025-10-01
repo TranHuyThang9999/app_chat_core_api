@@ -4,10 +4,10 @@ using PaymentCoreServiceApi.Infrastructure.DbContexts;
 
 namespace PaymentCoreServiceApi.Infrastructure.Repositories.Write;
 
-public class ConversationWriteRepository : EfBaseWriteOnlyRepository<Conversation>, IConversationWriteRepository
+public class ChannelWriteRepository : EfBaseWriteOnlyRepository<Channel>, IChannelWriteRepository
 {
     private readonly AppDbContext _context;
-    public ConversationWriteRepository(AppDbContext context) : base(context)
+    public ChannelWriteRepository(AppDbContext context) : base(context)
     {
         _context = context;
     }
