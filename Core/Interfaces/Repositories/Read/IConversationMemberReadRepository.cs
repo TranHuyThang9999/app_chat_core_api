@@ -2,8 +2,8 @@ using PaymentCoreServiceApi.Core.Entities.ConversationMemberGenerated;
 
 namespace PaymentCoreServiceApi.Core.Interfaces.Repositories.Read;
 
-public interface IConversationMemberReadRepository : IBaseReadRepository<ConversationMember>
+public interface IChannelMemberReadRepository : IBaseReadRepository<ChannelMember>
 {
-    Task<bool> IsUserInConversationAsync(long conversationId, long userId, CancellationToken cancellationToken = default);
-    Task<IEnumerable<ConversationMember>> GetConversationMembersAsync(long conversationId, CancellationToken cancellationToken = default);
+    Task<bool> IsUserInChannelAsync(long channelId, long userId, CancellationToken cancellationToken = default);
+    Task<IEnumerable<ChannelMember>> GetChannelMembersAsync(long channelId, CancellationToken cancellationToken = default);
 }

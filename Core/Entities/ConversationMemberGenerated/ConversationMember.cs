@@ -2,9 +2,9 @@ using PaymentCoreServiceApi.Core.Entities.BaseModel;
 
 namespace PaymentCoreServiceApi.Core.Entities.ConversationMemberGenerated;
 
-public class ConversationMember:  EntityBase
+public class ChannelMember:  EntityBase
 {
-    public long ConversationId { get; set; }
+    public long ChannelId { get; set; }
     public long UserId { get; set; }
 
     public DateTime JoinedAt { get; set; } = DateTime.UtcNow;

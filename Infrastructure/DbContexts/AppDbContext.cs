@@ -20,20 +20,20 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Message> Messages { get; set; }
 
     /// <summary>
-    /// Bảng lưu các cuộc hội thoại (Conversation).
+    /// Bảng lưu các kênh chat (Channel).
     /// - Đại diện cho "phòng chat": có thể là chat 1-1 hoặc nhóm.
     /// - Chứa tên, ảnh đại diện, loại (IsGroup), v.v.
     /// - Là nơi tập hợp tất cả tin nhắn và thành viên.
     /// </summary>
-    public DbSet<Conversation> Conversations { get; set; }
+    public DbSet<Conversation> Channels { get; set; }
 
     /// <summary>
-    /// Bảng trung gian quản lý thành viên trong hội thoại (ConversationMember).
-    /// - Thiết lập mối quan hệ nhiều-nhiều giữa User và Conversation.
+    /// Bảng trung gian quản lý thành viên trong kênh chat (ChannelMember).
+    /// - Thiết lập mối quan hệ nhiều-nhiều giữa User và Channel.
     /// - Theo dõi: ai tham gia, khi nào, có phải admin không, đã rời nhóm chưa.
     /// - Cốt lõi để kiểm soát quyền và hiển thị danh sách thành viên.
     /// </summary>
-    public DbSet<ConversationMember> ConversationMembers { get; set; }
+    public DbSet<ChannelMember> ChannelMembers { get; set; }
 
     // Để cập nhật cơ sở dữ liệu, chạy lệnh:
     // dotnet ef database update

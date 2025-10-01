@@ -31,8 +31,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPinHasher, PinHasher>();
         services.AddScoped<IConversationWriteRepository, ConversationWriteRepository>();
         services.AddScoped<IConversationReadRepository, ConversationReadRepository>();
-        services.AddScoped<IConversationMemberWriteRepository, ConversationMemberWriteRepository>();
-        services.AddScoped<IConversationMemberReadRepository, ConversationMemberReadRepository>();
+        services.AddScoped<IChannelMemberWriteRepository, ChannelMemberWriteRepository>();
+        services.AddScoped<IChannelMemberReadRepository, ChannelMemberReadRepository>();
         
         return services;
     }

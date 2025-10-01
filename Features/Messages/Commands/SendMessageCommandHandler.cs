@@ -19,14 +19,14 @@ public class SendMessageCommandHandler : IRequestApiResponseHandler<SendMessageC
     private readonly IUserReadRepository _userReadRepository;
     private readonly IExecutionContext _currentUser;
     private readonly ILogger<SendMessageCommandHandler> _logger;
-    private readonly IConversationMemberWriteRepository _conversationMemberWriteRepository;
+    private readonly IChannelMemberWriteRepository _channelMemberWriteRepository;           
 
 
     public SendMessageCommandHandler(
         IMessageWriteRepository messageWriteRepository,
         IConversationWriteRepository conversationWriteRepository,
         IConversationReadRepository conversationReadRepository,
-        IConversationMemberWriteRepository conversationMemberWriteRepository,
+        IChannelMemberWriteRepository channelMemberWriteRepository,
         IUserReadRepository userReadRepository,
         IExecutionContext currentUser,
         ILogger<SendMessageCommandHandler> logger)
@@ -37,7 +37,7 @@ public class SendMessageCommandHandler : IRequestApiResponseHandler<SendMessageC
         _userReadRepository = userReadRepository;
         _currentUser = currentUser;
         _logger = logger;
-        _conversationMemberWriteRepository = conversationMemberWriteRepository;
+        _channelMemberWriteRepository = channelMemberWriteRepository;  
     }
 
     public async Task<ApiResponse<Message>> Handle(SendMessageCommand request, CancellationToken cancellationToken)
@@ -70,23 +70,23 @@ public class SendMessageCommandHandler : IRequestApiResponseHandler<SendMessageC
                 _logger.LogInformation("SendMessageCommandHandler: Tạo conversation mới, conversationId = {conversationId}", conversation.Id);
                 
                 // Thêm 2 thành viên vào conversation
-                await _conversationMemberWriteRepository.AddRangeAsync(new List<ConversationMember>
+                await _channelMemberWriteRepository.AddRangeAsync(new List<ChannelMember>
                 {
-                    new ConversationMember
+                    new ChannelMember
                     {
-                        ConversationId = conversation.Id,
+                        ChannelId = conversation.Id,
                         UserId = _currentUser.Id,
                         JoinedAt = DateTime.UtcNow
                     },
-                    new ConversationMember
+                    new ChannelMember
                     {
-                        ConversationId = conversation.Id,
+                        ChannelId = conversation.Id,
                         UserId = request.ReceiverId,
                         JoinedAt = DateTime.UtcNow
                     }
                 });
                 
-                await _conversationMemberWriteRepository.CommitAsync(cancellationToken);
+                await _channelMemberWriteRepository.CommitAsync(cancellationToken);
             }
             
             // Tạo message

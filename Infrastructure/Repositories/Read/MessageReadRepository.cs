@@ -19,9 +19,9 @@ public class MessageReadRepository : EfBaseReadOnlyRepository<Message>, IMessage
     {
         _logger.LogInformation("GetMessagesByConversationAsync: conversationId = {conversationId}, userId = {userId}, onlyUnread = {onlyUnread}, skip = {skip}, take = {take}",
             conversationId, userId, onlyUnread, skip, take);
-        // Bước 1: Kiểm tra người dùng có trong hội thoại không
-        var isMember = await _context.ConversationMembers
-            .AnyAsync(cm => cm.ConversationId == conversationId &&
+        // Bước 1: Kiểm tra người dùng có trong channel không
+        var isMember = await _context.ChannelMembers
+            .AnyAsync(cm => cm.ChannelId == conversationId &&
                             cm.UserId == userId &&
                             !cm.IsLeft,
                     cancellationToken);

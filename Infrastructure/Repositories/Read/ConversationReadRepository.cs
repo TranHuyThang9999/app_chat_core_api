@@ -16,19 +16,19 @@ public class ConversationReadRepository : EfBaseReadOnlyRepository<Conversation>
 
     public async Task<Conversation?> GetPrivateConversationAsync(long userId1, long userId2, CancellationToken cancellationToken = default)
     {
-        // Tìm conversation private giữa 2 user
-        var conversation = await _context.Conversations
+        // Tìm channel private giữa 2 user
+        var conversation = await _context.Channels
             .Where(c => !c.IsGroup)
-            .Where(c => _context.ConversationMembers
-                .Where(cm => cm.ConversationId == c.Id && !cm.IsLeft)
+            .Where(c => _context.ChannelMembers
+                .Where(cm => cm.ChannelId == c.Id && !cm.IsLeft)
                 .Select(cm => cm.UserId)
                 .Contains(userId1) &&
-                _context.ConversationMembers
-                .Where(cm => cm.ConversationId == c.Id && !cm.IsLeft)
+                _context.ChannelMembers
+                .Where(cm => cm.ChannelId == c.Id && !cm.IsLeft)
                 .Select(cm => cm.UserId)
                 .Contains(userId2))
-            .Where(c => _context.ConversationMembers
-                .Count(cm => cm.ConversationId == c.Id && !cm.IsLeft) == 2)
+            .Where(c => _context.ChannelMembers
+                .Count(cm => cm.ChannelId == c.Id && !cm.IsLeft) == 2)
             .FirstOrDefaultAsync(cancellationToken);
 
         return conversation;
@@ -36,9 +36,9 @@ public class ConversationReadRepository : EfBaseReadOnlyRepository<Conversation>
 
     public async Task<IEnumerable<Conversation>> GetUserConversationsAsync(long userId, CancellationToken cancellationToken = default)
     {
-        return await _context.Conversations
-            .Where(c => _context.ConversationMembers
-                .Any(cm => cm.ConversationId == c.Id && cm.UserId == userId && !cm.IsLeft))
+        return await _context.Channels
+            .Where(c => _context.ChannelMembers
+                .Any(cm => cm.ChannelId == c.Id && cm.UserId == userId && !cm.IsLeft))
             .OrderByDescending(c => c.UpdatedAt)
             .ToListAsync(cancellationToken);
     }
